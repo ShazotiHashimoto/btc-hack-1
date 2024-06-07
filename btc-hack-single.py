@@ -102,8 +102,17 @@ def get_balance_alternate(address):
         balance = int(funded_txo_sum) - int(spent_txo_sum)
         return balance
     except:
-        balance = get_balance(address)
-        return balance
+        try:
+            time.sleep(5)
+            response = requests.get("https://blockstream.info/api/address/" + str(address))
+            funded_txo_sum = response.json()['chain_stats']["funded_txo_sum"]
+            spent_txo_sum = response.json()['chain_stats']["spent_txo_sum"]
+            balance = int(funded_txo_sum) - int(spent_txo_sum)
+            return balance
+            # balance = get_balance(address)
+            # return balance
+        except:
+            return -1
     
 def check_BTC_balance(address, retries=3, delay=5):
     # Check the balance of the address
@@ -134,7 +143,7 @@ if __name__ == '__main__':
                    "WIF private key: " + str(private_key_to_WIF(private_key)) + "\n" +
                    "Public key: " + str(private_key_to_public_key(private_key)).upper() + "\n" +
                    "Balance: " + str(balance) + "\n\n")
-            elif (balance != 0):
+            elif (balance > 0):
                 
                 file = open("found.txt","a")
                 file.write("Address: " + str(address) + "\n" +
