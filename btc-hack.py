@@ -1,7 +1,7 @@
-# Purpyl Media Bitcoin Brute Forcer
+# BTC-Hack
 # Made by David Gilbert
-# https://github.com/purpyl-media/btc-hack
-# https://www.purpyl.media
+# https://github.com/DavidMGilbert/btc-hack
+# https://www.davidmgilbert.com
 
 try:
     import sys
@@ -65,8 +65,8 @@ def public_key_to_address(public_key):
 def get_balance(address):
     time.sleep(0.2) #This is to avoid over-using the API and keep the program running indefinately.
     try:
-        response = requests.get("https://sochain.com/api/v2/address/BTC/" + str(address))
-        return float(response.json()['data']['balance']) 
+        response = requests.get("https://api.blockcypher.com/v1/btc/main/addrs/" + str(address) + "/balance")
+        return float(response.json()['balance']) 
     except:
         return -1
 
@@ -89,7 +89,7 @@ def process(data, balance):
     private_key = data[0]
     address = data[1]
     if (balance == 0.00000000):
-        print("{:<34}".format(str(address)) + " : " + str(balance))
+        print("{:<34}".format(str(address)) + ": " + str(balance))
     if (balance > 0.00000000):
         file = open("found.txt","a")
         file.write("address: " + str(address) + "\n" +
