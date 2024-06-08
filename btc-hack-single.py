@@ -3,6 +3,7 @@
 # https://github.com/DavidMGilbert/btc-hack
 # https://www.davidmgilbert.com
 
+import sys
 import hashlib
 import os
 import hashlib
@@ -68,22 +69,19 @@ def data_export(queue):
         queue.put(data, block = False)
 
 def displayNotification(message,title=None,subtitle=None,soundname=None):
-	"""
-		Display an OSX notification with message title an subtitle
-		sounds are located in /System/Library/Sounds or ~/Library/Sounds
-	"""
-	titlePart = ''
-	if(not title is None):
-		titlePart = 'with title "{0}"'.format(title)
-	subtitlePart = ''
-	if(not subtitle is None):
-		subtitlePart = 'subtitle "{0}"'.format(subtitle)
-	soundnamePart = ''
-	if(not soundname is None):
-		soundnamePart = 'sound name "{0}"'.format(soundname)
+    if sys.platform == "darwin":
+        titlePart = ''
+        if(not title is None):
+            titlePart = 'with title "{0}"'.format(title)
+        subtitlePart = ''
+        if(not subtitle is None):
+            subtitlePart = 'subtitle "{0}"'.format(subtitle)
+        soundnamePart = ''
+        if(not soundname is None):
+            soundnamePart = 'sound name "{0}"'.format(soundname)
 
-	appleScriptNotification = 'display notification "{0}" {1} {2} {3}'.format(message,titlePart,subtitlePart,soundnamePart)
-	os.system("osascript -e '{0}'".format(appleScriptNotification))
+        appleScriptNotification = 'display notification "{0}" {1} {2} {3}'.format(message,titlePart,subtitlePart,soundnamePart)
+        os.system("osascript -e '{0}'".format(appleScriptNotification))
 
 def get_balance(address):
     time.sleep(0.2) #This is to avoid over-using the API and keep the program running indefinately.

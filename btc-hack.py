@@ -97,6 +97,21 @@ def data_export(queue):
         data = (private_key, address)
         queue.put(data, block = False)
 
+def displayNotification(message,title=None,subtitle=None,soundname=None):
+    if sys.platform == "darwin":
+        titlePart = ''
+        if(not title is None):
+            titlePart = 'with title "{0}"'.format(title)
+        subtitlePart = ''
+        if(not subtitle is None):
+            subtitlePart = 'subtitle "{0}"'.format(subtitle)
+        soundnamePart = ''
+        if(not soundname is None):
+            soundnamePart = 'sound name "{0}"'.format(soundname)
+
+        appleScriptNotification = 'display notification "{0}" {1} {2} {3}'.format(message,titlePart,subtitlePart,soundnamePart)
+        os.system("osascript -e '{0}'".format(appleScriptNotification))
+
 def worker(queue):
     while True:
         if not queue.empty():
@@ -117,6 +132,7 @@ def process(data, balance):
                    "public key: " + str(private_key_to_public_key(private_key)).upper() + "\n" +
                    "balance: " + str(balance) + "\n\n")
         file.close()
+        displayNotification("FOUND", "FOUND", "FOUND", "Alarm")
 
 def thread(iterator):
     processes = []
