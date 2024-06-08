@@ -9,9 +9,9 @@ try:
     import time
     import hashlib
     import binascii
-    import multiprocessing
-    from multiprocessing import Process, Queue
-    from multiprocessing.pool import ThreadPool
+    import multiprocess
+    from multiprocess import Process, Queue
+    from multiprocess.pool import ThreadPool
     import threading
     import base58
     import ecdsa
@@ -61,7 +61,26 @@ def public_key_to_address(public_key):
         output.append(alphabet[0])
         val += 1
     return ''.join(output[::-1])
-
+def get_balance_alternate(address):
+    try:
+        response = requests.get("https://blockstream.info/api/address/" + str(address))
+        funded_txo_sum = response.json()['chain_stats']["funded_txo_sum"]
+        spent_txo_sum = response.json()['chain_stats']["spent_txo_sum"]
+        balance = int(funded_txo_sum) - int(spent_txo_sum)
+        return balance
+    except:
+        try:
+            time.sleep(5)
+            response = requests.get("https://blockstream.info/api/address/" + str(address))
+            funded_txo_sum = response.json()['chain_stats']["funded_txo_sum"]
+            spent_txo_sum = response.json()['chain_stats']["spent_txo_sum"]
+            balance = int(funded_txo_sum) - int(spent_txo_sum)
+            return balance
+            # balance = get_balance(address)
+            # return balance
+        except:
+            return -1
+        
 def get_balance(address):
     time.sleep(0.2) #This is to avoid over-using the API and keep the program running indefinately.
     try:
@@ -82,15 +101,15 @@ def worker(queue):
     while True:
         if not queue.empty():
             data = queue.get(block = True)
-            balance = get_balance(data[1])
+            balance = get_balance_alternate(data[1])
             process(data, balance)
 
 def process(data, balance):
     private_key = data[0]
     address = data[1]
-    if (balance == 0.00000000):
+    if (balance == 0):
         print("{:<34}".format(str(address)) + ": " + str(balance))
-    if (balance > 0.00000000):
+    if (balance > 0):
         file = open("found.txt","a")
         file.write("address: " + str(address) + "\n" +
                    "private key: " + str(private_key) + "\n" +
@@ -114,8 +133,9 @@ def thread(iterator):
 
 if __name__ == '__main__':
     try:
-        pool = ThreadPool(processes = multiprocessing.cpu_count()*2)
-        pool.map(thread, range(0, 1)) # Limit to single CPU thread as we can only query 300 addresses per minute
+        pool = ThreadPool(processes = multiprocess.cpu_count()*2)
+
+        pool.map(thread, range(4, 8)) # Limit to single CPU thread as we can only query 300 addresses per minute
     except:
         pool.close()
         exit()

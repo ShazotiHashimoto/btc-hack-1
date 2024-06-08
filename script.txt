@@ -1,0 +1,3 @@
+OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES python3 btc-hack.py
+
+eval "$(pyenv init --path)"  
