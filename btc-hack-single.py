@@ -138,11 +138,13 @@ if __name__ == '__main__':
             private_key = data[0]
             address = data[1]
             if (balance == 0):
-                print("Address: " + "{:<34}".format(str(address)) + "\n" +
+                file = open ("log.txt","a")
+                file.write("Address: " + str(address) + "\n" +
                    "Private key: " + str(private_key) + "\n" +
                    "WIF private key: " + str(private_key_to_WIF(private_key)) + "\n" +
                    "Public key: " + str(private_key_to_public_key(private_key)).upper() + "\n" +
                    "Balance: " + str(balance) + "\n\n")
+                file.close()
             elif (balance > 0):
                 
                 file = open("found.txt","a")
