@@ -151,7 +151,7 @@ if __name__ == '__main__':
     try:
         pool = ThreadPool(processes = multiprocess.cpu_count()*2)
 
-        pool.map(thread, range(4, 8)) # Limit to single CPU thread as we can only query 300 addresses per minute
+        pool.map(thread, range(0, 1)) # Limit to single CPU thread as we can only query 300 addresses per minute
     except:
         pool.close()
         exit()
