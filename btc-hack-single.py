@@ -129,6 +129,7 @@ def check_BTC_balance(address, retries=3, delay=5):
             return balance
 
 if __name__ == '__main__':
+    try:
         while True:
             private_key = generate_private_key()
             public_key = private_key_to_public_key(private_key)
@@ -160,3 +161,5 @@ if __name__ == '__main__':
                    "WIF private key: " + str(private_key_to_WIF(private_key)) + "\n" +
                    "Public key: " + str(private_key_to_public_key(private_key)).upper() + "\n" +
                    "Balance: " + str(balance) + "\n\n")
+    except KeyboardInterrupt:
+        logging.info("Program interrupted by user. Exiting...")
