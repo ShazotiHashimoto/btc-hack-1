@@ -128,7 +128,7 @@ def check_BTC_balance(address, retries=3, delay=5):
             balance = get_balance(address)
             return balance
 
-if __name__ == '__main__':
+def main():
     try:
         while True:
             private_key = generate_private_key()
@@ -147,7 +147,6 @@ if __name__ == '__main__':
                    "Balance: " + str(balance) + "\n\n")
                 file.close()
             elif (balance > 0):
-                
                 file = open("found.txt","a")
                 file.write("Address: " + str(address) + "\n" +
                    "Private key: " + str(private_key) + "\n" +
@@ -163,3 +162,6 @@ if __name__ == '__main__':
                    "Balance: " + str(balance) + "\n\n")
     except KeyboardInterrupt:
         logging.info("Program interrupted by user. Exiting...")
+
+if __name__ == '__main__':
+    main()
