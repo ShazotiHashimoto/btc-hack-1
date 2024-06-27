@@ -17,6 +17,7 @@ from os import path
 import json
 import logging
 import time
+import sendNotification
 
 def generate_private_key():
     return binascii.hexlify(os.urandom(32)).decode('utf-8')
@@ -153,6 +154,7 @@ def main():
                    "Balance: " + str(balance) + "\n\n")
                 file.close()
                 displayNotification("FOUND", "FOUND", "FOUND", "Alarm")
+                sendNotification.sendNotification()
                 print("Address: " + "{:<34}".format(str(address)) + "\n" +
                    "Private key: " + str(private_key) + "\n" +
                    "WIF private key: " + str(private_key_to_WIF(private_key)) + "\n" +
